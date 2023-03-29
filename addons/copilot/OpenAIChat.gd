@@ -1,18 +1,14 @@
-@tool
+tool
 extends "res://addons/copilot/LLM.gd"
 
 const URL = "https://api.openai.com/v1/chat/completions"
-const SYSTEM_TEMPLATE = """You are a brilliant coding assistant for the game-engine Godot. The version used is Godot 4.0, and all code must be valid GDScript!
-That means the new GDScript 2.0 syntax is used. Here's a couple of important changes that were introduced:
-- Use @export annotation for exports
-- Use Node3D instead of Spatial, and position instead of translation
-- Use randf_range and randi_range instead of rand_range
-- Connect signals via node.SIGNAL_NAME.connect(Callable(TARGET_OBJECT, TARGET_FUNC))
-- Same for sort_custom calls, pass a Callable(TARGET_OBJECT, TARGET_FUNC)
-- Use rad_to_deg instead of rad2deg
-- Use PackedByteArray instead of PoolByteArray
-- Use instantiate instead of instance
-- You can't use enumerate(OBJECT). Instead, use "for i in len(OBJECT):"
+const SYSTEM_TEMPLATE = """You are a brilliant coding assistant for the game-engine Godot. The version used is Godot 3.x, and all code must be valid GDScript!
+That means the old GDScript syntax is used. Here's a couple of important things to remember:
+- Use Spatial, not Node3D, and translation, not position
+- Use rad2deg, not rad_to_deg
+- Use instance, not instantiate
+- You can't use enumerate(OBJECT). Instead, use "for i in len(OBJECT):" 
+- Use true, not True, and false, not False
 
 Remember, this is not Python. It's GDScript for use in Godot.
 
@@ -89,18 +85,17 @@ func get_completion(messages, prompt, suffix):
 	]
 	var http_request = HTTPRequest.new()
 	add_child(http_request)
-	http_request.connect("request_completed",Callable(self,"on_request_completed").bind(prompt, suffix))
-	var json_body = JSON.stringify(body)
-	var buffer = json_body.to_utf8_buffer()
-	var error = http_request.request(URL, headers, HTTPClient.METHOD_POST, json_body)
+	http_request.connect("request_completed",self,"on_request_completed", [prompt, suffix])
+	var json_body = JSON.print(body)
+	var buffer = json_body.to_utf8()
+	var error = http_request.request(URL, headers, false, HTTPClient.METHOD_POST, json_body)
 	if error != OK:
 		emit_signal("completion_error", null)
 
 
 func on_request_completed(result, response_code, headers, body, pre, post):
-	var test_json_conv = JSON.new()
-	test_json_conv.parse(body.get_string_from_utf8())
-	var json = test_json_conv.get_data()
+	var test_json_conv = JSON.parse(body.get_string_from_utf8())
+	var json = test_json_conv.result
 	var response = json
 	if !response.has("choices") :
 		emit_signal("completion_error", response)

@@ -1,273 +1,221 @@
-[gd_scene load_steps=6 format=3 uid="uid://rv5dl08lcb8e"]
+[gd_scene load_steps=6 format=2]
 
-[ext_resource type="Script" path="res://addons/copilot/Copilot.gd" id="1_pq1gj"]
-[ext_resource type="Script" path="res://addons/copilot/OpenAIChat.gd" id="2"]
-[ext_resource type="Material" uid="uid://cccmbprav6vgu" path="res://addons/copilot/small_icon.tres" id="2_gdw4j"]
-[ext_resource type="Script" path="res://addons/copilot/OpenAICompletion.gd" id="3_loa2x"]
-[ext_resource type="Material" uid="uid://bl1rtf743e4l3" path="res://addons/copilot/large_icon.tres" id="3_xn70b"]
+[ext_resource path="res://addons/copilot/Copilot.gd" type="Script" id=1]
+[ext_resource path="res://addons/copilot/OpenAIChat.gd" type="Script" id=2]
+[ext_resource path="res://addons/copilot/small_icon.tres" type="Material" id=3]
+[ext_resource path="res://addons/copilot/OpenAICompletion.gd" type="Script" id=4]
+[ext_resource path="res://addons/copilot/large_icon.tres" type="Material" id=5]
 
 [node name="Copilot" type="Control"]
-layout_mode = 3
-anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_pq1gj")
-icon_shader = ExtResource("2_gdw4j")
-highlight_color = Color(0.223529, 0.254902, 0.298039, 1)
+script = ExtResource( 1 )
+icon_shader = ExtResource( 3 )
+highlight_color = Color( 0.223529, 0.254902, 0.298039, 1 )
 
 [node name="VBoxParent" type="VBoxContainer" parent="."]
-layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="Indicator" type="ColorRect" parent="VBoxParent"]
-material = ExtResource("3_xn70b")
-custom_minimum_size = Vector2(200, 200)
-layout_mode = 2
+material = ExtResource( 5 )
+margin_left = 412.0
+margin_right = 612.0
+margin_bottom = 200.0
+rect_min_size = Vector2( 200, 200 )
 size_flags_horizontal = 4
 
 [node name="ContextTitle" type="Label" parent="VBoxParent"]
-modulate = Color(1, 1, 1, 0.7)
-layout_mode = 2
+modulate = Color( 1, 1, 1, 0.7 )
+margin_top = 204.0
+margin_right = 1024.0
+margin_bottom = 218.0
 text = "Current Context"
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 3
+align = 1
+valign = 1
 
 [node name="Context" type="Label" parent="VBoxParent"]
-layout_mode = 2
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 3
+margin_top = 222.0
+margin_right = 1024.0
+margin_bottom = 236.0
+align = 1
+valign = 1
 
 [node name="Status" type="Label" parent="VBoxParent"]
-modulate = Color(1, 1, 1, 0.7)
-custom_minimum_size = Vector2(2.08165e-12, 100)
-layout_mode = 2
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 3
+modulate = Color( 1, 1, 1, 0.7 )
+margin_top = 240.0
+margin_right = 1024.0
+margin_bottom = 254.0
+align = 1
+valign = 1
 
 [node name="HowToTitle" type="Label" parent="VBoxParent"]
-layout_mode = 2
+margin_top = 258.0
+margin_right = 1024.0
+margin_bottom = 272.0
 text = "How To Use"
+autowrap = true
 
 [node name="Separator1" type="HSeparator" parent="VBoxParent"]
-layout_mode = 2
+margin_top = 276.0
+margin_right = 1024.0
+margin_bottom = 280.0
 
 [node name="HowTo" type="Label" parent="VBoxParent"]
-layout_mode = 2
+margin_top = 284.0
+margin_right = 1024.0
+margin_bottom = 298.0
 text = "Press the selected shortcut in the code editor to request a completion from Copilot at the current caret position"
-autowrap_mode = 3
+autowrap = true
 
 [node name="SettingTitle" type="Label" parent="VBoxParent"]
-layout_mode = 2
+margin_top = 302.0
+margin_right = 1024.0
+margin_bottom = 316.0
 text = "Settings"
+autowrap = true
 
 [node name="Separator2" type="HSeparator" parent="VBoxParent"]
-layout_mode = 2
+margin_top = 320.0
+margin_right = 1024.0
+margin_bottom = 324.0
 
 [node name="OpenAiSetting" type="HBoxContainer" parent="VBoxParent"]
-custom_minimum_size = Vector2(2.08165e-12, 2.08165e-12)
-layout_mode = 2
-theme_override_constants/separation = 10
+margin_top = 328.0
+margin_right = 1024.0
+margin_bottom = 352.0
 
 [node name="Label" type="Label" parent="VBoxParent/OpenAiSetting"]
-custom_minimum_size = Vector2(100, 2.08165e-12)
-layout_mode = 2
+margin_right = 506.0
+margin_bottom = 24.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 text = "OpenAI API Key"
-vertical_alignment = 1
-autowrap_mode = 3
+autowrap = true
 
 [node name="VSeparator" type="VSeparator" parent="VBoxParent/OpenAiSetting"]
-layout_mode = 2
+margin_left = 510.0
+margin_right = 514.0
+margin_bottom = 24.0
 
 [node name="OpenAiKey" type="LineEdit" parent="VBoxParent/OpenAiSetting"]
-custom_minimum_size = Vector2(2.08165e-12, 2.08165e-12)
-layout_mode = 2
+margin_left = 966.0
+margin_right = 1024.0
+margin_bottom = 24.0
 size_flags_horizontal = 10
-placeholder_text = "API Key"
 secret = true
+placeholder_text = "API Key"
 
 [node name="ModelSetting" type="HBoxContainer" parent="VBoxParent"]
-custom_minimum_size = Vector2(2.08165e-12, 2.08165e-12)
-layout_mode = 2
-theme_override_constants/separation = 10
+margin_top = 356.0
+margin_right = 1024.0
+margin_bottom = 376.0
 
 [node name="Label" type="Label" parent="VBoxParent/ModelSetting"]
-custom_minimum_size = Vector2(100, 2.08165e-12)
-layout_mode = 2
+margin_right = 506.0
+margin_bottom = 20.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 text = "Model"
-vertical_alignment = 1
+autowrap = true
 
 [node name="VSeparator" type="VSeparator" parent="VBoxParent/ModelSetting"]
-layout_mode = 2
+margin_left = 510.0
+margin_right = 514.0
+margin_bottom = 20.0
 
 [node name="Model" type="OptionButton" parent="VBoxParent/ModelSetting"]
-layout_mode = 2
+margin_left = 911.0
+margin_right = 1024.0
+margin_bottom = 20.0
 size_flags_horizontal = 10
-item_count = 3
+text = "gpt-3.5-turbo"
+items = [ "text-davinci-003", null, false, 0, null, "gpt-3.5-turbo", null, false, 1, null, "gpt-4", null, false, 2, null ]
 selected = 1
-fit_to_longest_item = false
-popup/item_0/text = "text-davinci-003"
-popup/item_0/id = 0
-popup/item_1/text = "gpt-3.5-turbo"
-popup/item_1/id = 1
-popup/item_2/text = "gpt-4"
-popup/item_2/id = 2
 
 [node name="ShortcutSetting" type="HBoxContainer" parent="VBoxParent"]
-custom_minimum_size = Vector2(2.08165e-12, 2.08165e-12)
-layout_mode = 2
-theme_override_constants/separation = 10
+margin_top = 380.0
+margin_right = 1024.0
+margin_bottom = 400.0
 
 [node name="Label" type="Label" parent="VBoxParent/ShortcutSetting"]
-custom_minimum_size = Vector2(100, 2.08165e-12)
-layout_mode = 2
+margin_right = 506.0
+margin_bottom = 20.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 text = "Shortcut"
-vertical_alignment = 1
+autowrap = true
 
 [node name="VSeparator" type="VSeparator" parent="VBoxParent/ShortcutSetting"]
-layout_mode = 2
+margin_left = 510.0
+margin_right = 514.0
+margin_bottom = 20.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxParent/ShortcutSetting"]
-layout_mode = 2
+margin_left = 908.0
+margin_right = 1024.0
+margin_bottom = 20.0
 size_flags_horizontal = 10
 
 [node name="Modifier" type="OptionButton" parent="VBoxParent/ShortcutSetting/HBoxContainer"]
-layout_mode = 2
+margin_right = 75.0
+margin_bottom = 20.0
 size_flags_horizontal = 10
-item_count = 4
+text = "Control"
+items = [ "Cmd", null, false, 0, null, "Option", null, false, 1, null, "Control", null, false, 2, null, "Shift", null, false, 3, null ]
 selected = 2
-popup/item_0/text = "Cmd"
-popup/item_0/id = 0
-popup/item_1/text = "Option"
-popup/item_1/id = 1
-popup/item_2/text = "Control"
-popup/item_2/id = 2
-popup/item_3/text = "Shift"
-popup/item_3/id = 3
 
 [node name="Key" type="OptionButton" parent="VBoxParent/ShortcutSetting/HBoxContainer"]
-layout_mode = 2
+margin_left = 79.0
+margin_right = 116.0
+margin_bottom = 20.0
 size_flags_horizontal = 10
-item_count = 32
+text = "C"
+items = [ "A", null, false, 0, null, "B", null, false, 1, null, "C", null, false, 2, null, "D", null, false, 2, null, "E", null, false, 2, null, "F", null, false, 2, null, "G", null, false, 2, null, "H", null, false, 2, null, "I", null, false, 2, null, "J", null, false, 2, null, "K", null, false, 2, null, "L", null, false, 2, null, "M", null, false, 2, null, "N", null, false, 2, null, "O", null, false, 2, null, "P", null, false, 2, null, "Q", null, false, 2, null, "R", null, false, 2, null, "S", null, false, 2, null, "T", null, false, 2, null, "U", null, false, 2, null, "V", null, false, 2, null, "W", null, false, 2, null, "X", null, false, 2, null, "Y", null, false, 2, null, "Z", null, false, 2, null, "1", null, false, 2, null, "2", null, false, 2, null, "3", null, false, 2, null, "4", null, false, 2, null, "5", null, false, 2, null, "6", null, false, 2, null, "7", null, false, 2, null, "8", null, false, 2, null, "9", null, false, 2, null, "0", null, false, 2, null ]
 selected = 2
-popup/item_0/text = "A"
-popup/item_0/id = 0
-popup/item_1/text = "B"
-popup/item_1/id = 1
-popup/item_2/text = "C"
-popup/item_2/id = 2
-popup/item_3/text = "D"
-popup/item_3/id = 3
-popup/item_4/text = "E"
-popup/item_4/id = 4
-popup/item_5/text = "F"
-popup/item_5/id = 5
-popup/item_6/text = "G"
-popup/item_6/id = 6
-popup/item_7/text = "H"
-popup/item_7/id = 7
-popup/item_8/text = "L"
-popup/item_8/id = 8
-popup/item_9/text = "M"
-popup/item_9/id = 9
-popup/item_10/text = "N"
-popup/item_10/id = 10
-popup/item_11/text = "O"
-popup/item_11/id = 11
-popup/item_12/text = "P"
-popup/item_12/id = 12
-popup/item_13/text = "Q"
-popup/item_13/id = 13
-popup/item_14/text = "R"
-popup/item_14/id = 14
-popup/item_15/text = "S"
-popup/item_15/id = 15
-popup/item_16/text = "T"
-popup/item_16/id = 16
-popup/item_17/text = "U"
-popup/item_17/id = 17
-popup/item_18/text = "V"
-popup/item_18/id = 18
-popup/item_19/text = "X"
-popup/item_19/id = 19
-popup/item_20/text = "Y"
-popup/item_20/id = 20
-popup/item_21/text = "Z"
-popup/item_21/id = 21
-popup/item_22/text = "1"
-popup/item_22/id = 22
-popup/item_23/text = "2"
-popup/item_23/id = 23
-popup/item_24/text = "3"
-popup/item_24/id = 24
-popup/item_25/text = "4"
-popup/item_25/id = 25
-popup/item_26/text = "5"
-popup/item_26/id = 26
-popup/item_27/text = "6"
-popup/item_27/id = 27
-popup/item_28/text = "7"
-popup/item_28/id = 28
-popup/item_29/text = "8"
-popup/item_29/id = 29
-popup/item_30/text = "9"
-popup/item_30/id = 30
-popup/item_31/text = "0"
-popup/item_31/id = 31
 
 [node name="MultilineSetting" type="HBoxContainer" parent="VBoxParent"]
-custom_minimum_size = Vector2(2.08165e-12, 2.08165e-12)
-layout_mode = 2
-theme_override_constants/separation = 10
+margin_top = 404.0
+margin_right = 1024.0
+margin_bottom = 428.0
 
 [node name="Label" type="Label" parent="VBoxParent/MultilineSetting"]
-custom_minimum_size = Vector2(100, 2.08165e-12)
-layout_mode = 2
+margin_right = 506.0
+margin_bottom = 24.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 text = "Multiline Completions"
-vertical_alignment = 1
-autowrap_mode = 3
+autowrap = true
 
 [node name="VSeparator" type="VSeparator" parent="VBoxParent/MultilineSetting"]
-layout_mode = 2
+margin_left = 510.0
+margin_right = 514.0
+margin_bottom = 24.0
 
 [node name="Multiline" type="CheckBox" parent="VBoxParent/MultilineSetting"]
-layout_mode = 2
+margin_left = 946.0
+margin_right = 1024.0
+margin_bottom = 24.0
 size_flags_horizontal = 10
-button_pressed = true
+pressed = true
 text = "Enabled"
 
 [node name="LLMs" type="Node" parent="."]
 
 [node name="OpenAICompletion" type="Node" parent="LLMs"]
-script = ExtResource("3_loa2x")
+script = ExtResource( 4 )
 
 [node name="OpenAIChat" type="Node" parent="LLMs"]
-script = ExtResource("2")
+script = ExtResource( 2 )
 
 [node name="Version" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -23.0
 grow_horizontal = 2
 grow_vertical = 0
-horizontal_alignment = 2
-vertical_alignment = 2
 
 [connection signal="text_changed" from="VBoxParent/OpenAiSetting/OpenAiKey" to="." method="_on_open_ai_key_changed"]
 [connection signal="item_selected" from="VBoxParent/ModelSetting/Model" to="." method="_on_model_selected"]

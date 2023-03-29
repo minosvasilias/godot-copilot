@@ -1,4 +1,4 @@
-@tool
+tool
 extends EditorPlugin
 
 const version = "1.0.0"
@@ -9,9 +9,9 @@ var editor_interface = get_editor_interface()
 
 func _enter_tree() -> void:
 	if(!dock):
-		dock = load(scene_path).instantiate()
+		dock = load(scene_path).instance()
 		add_control_to_dock(EditorPlugin.DOCK_SLOT_RIGHT_UL, dock)
-		main_screen_changed.connect(Callable(dock, "on_main_screen_changed"))
+		connect("main_screen_changed", dock, "on_main_screen_changed")
 		dock.editor_interface = get_editor_interface()
 		dock.set_version(version)
 

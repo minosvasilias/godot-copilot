@@ -1,18 +1,18 @@
-@tool
+tool
 extends Control
 
-@onready var llms = $LLMs
-@onready var context_label = $VBoxParent/Context
-@onready var status_label = $VBoxParent/Status
-@onready var model_select = $VBoxParent/ModelSetting/Model
-@onready var shortcut_modifier_select = $VBoxParent/ShortcutSetting/HBoxContainer/Modifier
-@onready var shortcut_key_select = $VBoxParent/ShortcutSetting/HBoxContainer/Key
-@onready var multiline_toggle = $VBoxParent/MultilineSetting/Multiline
-@onready var openai_key_input = $VBoxParent/OpenAiSetting/OpenAiKey
-@onready var version_label = $Version
+onready var llms = $LLMs
+onready var context_label = $VBoxParent/Context
+onready var status_label = $VBoxParent/Status
+onready var model_select = $VBoxParent/ModelSetting/Model
+onready var shortcut_modifier_select = $VBoxParent/ShortcutSetting/HBoxContainer/Modifier
+onready var shortcut_key_select = $VBoxParent/ShortcutSetting/HBoxContainer/Key
+onready var multiline_toggle = $VBoxParent/MultilineSetting/Multiline
+onready var openai_key_input = $VBoxParent/OpenAiSetting/OpenAiKey
+onready var version_label = $Version
 
-@export var icon_shader : ShaderMaterial
-@export var highlight_color : Color
+export var icon_shader : ShaderMaterial
+export var highlight_color : Color
 
 var editor_interface : EditorInterface
 var screen = "Script"
@@ -63,11 +63,11 @@ func _unhandled_key_input(event):
 		if cur_highlight:
 			#If completion is shown, TAB will accept it
 			#and the TAB input ignored
-			if event.keycode == KEY_TAB:
+			if event.scancode == KEY_TAB:
 				undo_input()
 				clear_highlights()
 			#BACKSPACE will remove it
-			elif event.keycode == KEY_BACKSPACE:
+			elif event.scancode == KEY_BACKSPACE:
 				revert_change()
 				clear_highlights()
 			#Any other key press will plainly accept it
@@ -79,39 +79,35 @@ func _unhandled_key_input(event):
 
 func is_mac():
 	#Platform check
-	return OS.get_name() == "macOS"
+	return OS.get_name() == "OSX"
 
 func shortcut_key_pressed(event):
 	#Check if selected shortcut key is pressed
-	var key_string = OS.get_keycode_string(event.keycode)
+	var key_string = OS.get_scancode_string(event.scancode)
 	return key_string == cur_shortcut_key
 
 func shortcut_modifier_pressed(event):
 	#Check if selected shortcut modifier is pressed
 	match cur_shortcut_modifier:
 		"Control":
-			return event.ctrl_pressed
+			return event.control
 		"Ctrl":
-			return event.ctrl_pressed
+			return event.control
 		"Alt":
-			return event.alt_pressed
+			return event.alt
 		"Option":
-			return event.alt_pressed
+			return event.alt
 		"Shift":
-			return event.shift_pressed
+			return event.shift
 		"Cmd":
-			return event.meta_pressed
+			return event.meta
 		_:
 			return false
 
 func clear_highlights():
-	#Clear all currently highlighted lines
-	#and reset request status
+	#Reset request status
 	request_code_state = null
 	cur_highlight = null
-	var editor = get_code_editor()
-	for line in range(editor.get_line_count()):
-		editor.set_line_background_color(line, Color(0, 0, 0, 0))
 
 func undo_input():
 	#Undo last input in code editor
@@ -128,23 +124,23 @@ func update_loading_indicator(create = false):
 		if !create: return
 		indicator = ColorRect.new()
 		indicator.material = icon_shader
-		indicator.custom_minimum_size = Vector2(line_height, line_height)
+		indicator.rect_min_size = Vector2(line_height, line_height)
 		editor.add_child(indicator)
-	var pos = editor.get_caret_draw_pos()
+	var pos = editor.get_pos_at_line_column(editor.cursor_get_line(), max(0, editor.cursor_get_column()-1))
 	var pre_post = get_pre_post()
-	#Caret position returned from Godot is not reliable
-	#Needs to be adjusted for empty lines
-	var is_on_empty_line = pre_post[0].right(1) == "\n"
-	var offset = line_height/2-1 if is_on_empty_line else line_height-1
-	indicator.position = Vector2(pos.x, pos.y - offset)
-	editor.editable = false
+	#Cursor position needs to be adjusted horizontally
+	var is_on_empty_line = pre_post[0].right(pre_post[0].length()-1) == "\n"
+	var offset_x = 0 if is_on_empty_line else line_height/2-1
+	var offset_y = line_height-1
+	indicator.rect_position = Vector2(pos.x + offset_x, pos.y - offset_y)
+	editor.readonly = true
 
 func remove_loading_indicator():
 	#Free loading indicator, and return editor to editable state
 	if is_instance_valid(indicator): indicator.queue_free()
 	set_status("")
 	var editor = get_code_editor()
-	editor.editable = true
+	editor.readonly = false
 
 func set_status(text):
 	#Update status label in dock
@@ -155,17 +151,16 @@ func insert_completion(content: String, pre, post):
 	var editor = get_code_editor()
 	var scroll = editor.scroll_vertical
 	
-	var caret_text = pre + content
+	var caret_text = (pre + content).strip_edges(false, true)
 	var lines_from = pre.split("\n")
 	var lines_to = caret_text.split("\n")
 	
 	cur_highlight = [lines_from.size(), lines_to.size()]
 	
 	editor.set_text(pre + content + post)
-	editor.set_caret_line(lines_to.size())
-	editor.set_caret_column(lines_to[-1].length())
+	editor.cursor_set_line(lines_to.size()-1)
+	editor.cursor_set_column(lines_to[-1].length())
 	editor.scroll_vertical = scroll
-	editor.update_code_completion_options(false)
 
 func revert_change():
 	#Revert inserted completion
@@ -174,24 +169,15 @@ func revert_change():
 	var old_text = request_code_state[0] + request_code_state[1]
 	var lines_from = request_code_state[0].strip_edges(false, true).split("\n")
 	code_edit.set_text(old_text)
-	code_edit.set_caret_line(lines_from.size()-1)
-	code_edit.set_caret_column(lines_from[-1].length())
+	code_edit.cursor_set_line(lines_from.size()-1)
+	code_edit.cursor_set_column(lines_from[-1].length())
 	code_edit.scroll_vertical = scroll
 	clear_highlights()
 
 func _process(delta):
 	#Update visuals and context label
-	update_highlights()
 	update_loading_indicator()
 	update_context()
-
-func update_highlights():
-	#Make sure highlighted lines persist until explicitely removed
-	#via key input
-	if cur_highlight:
-		var editor = get_code_editor()
-		for line in range(cur_highlight[0]-1, cur_highlight[1]):
-			editor.set_line_background_color(line, highlight_color)
 
 func update_context():
 	#Show currently edited file in dock
@@ -213,11 +199,20 @@ func get_code_editor():
 	#This does not return the shader editor!
 	if !editor_interface: return
 	var script_editor = editor_interface.get_script_editor()
-	var base_editor = script_editor.get_current_editor()
-	if base_editor:
-		var code_edit = base_editor.get_base_editor()
-		return code_edit
-	return null
+	
+	var script = script_editor.get_current_script()
+	if !script: return null
+	var text_edit = find_text_edit(script_editor)
+	return text_edit
+
+func find_text_edit(node):
+	var text_edit
+	for child in node.get_children():
+		if child is TextEdit and child.is_visible_in_tree():
+			return child
+		elif !text_edit:
+			text_edit = find_text_edit(child)
+	return text_edit
 
 func request_completion():
 	#Get current code and request completion from active model
@@ -234,7 +229,7 @@ func get_pre_post():
 	#Split current code based on caret position
 	var editor = get_code_editor()
 	var text = editor.get_text()
-	var pos = Vector2(editor.get_caret_line(), editor.get_caret_column())
+	var pos = Vector2(editor.cursor_get_line(), editor.cursor_get_column())
 	var pre = ""
 	var post = ""
 	for i in range(pos.x):
@@ -282,12 +277,14 @@ func _on_code_completion_received(completion, pre, post):
 	remove_loading_indicator()
 	if matches_request_state(pre, post):
 		insert_completion(completion, pre, post)
+	else:
+		clear_highlights()
 
 func _on_code_completion_error(error):
 	#Display error
 	remove_loading_indicator()
 	clear_highlights()
-	push_error(error)
+	push_error(str(error))
 
 func _on_open_ai_key_changed(key):
 	#Apply setting and store in config file
@@ -342,7 +339,7 @@ func load_config():
 
 func apply_by_value(option_button, value):
 	#Select item for option button based on value instead of index
-	for i in option_button.item_count:
+	for i in option_button.get_item_count():
 		if option_button.get_item_text(i) == value:
 			option_button.select(i)
 

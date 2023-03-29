@@ -282,6 +282,8 @@ func _on_code_completion_received(completion, pre, post):
 	remove_loading_indicator()
 	if matches_request_state(pre, post):
 		insert_completion(completion, pre, post)
+	else:
+		clear_highlights()
 
 func _on_code_completion_error(error):
 	#Display error

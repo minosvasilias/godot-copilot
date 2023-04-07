@@ -14,8 +14,9 @@ After installing the plugin, simply press the selected keyboard shortcut to gene
 
 ### How do i install this?
 
-- Navigate to the [releases page](https://github.com/minosvasilias/godot-copilot/releases) and follow the instructions for the latest one
-- Alternatively, clone this repository and copy the `copilot` addon into the `res://addons` directory of your project
+- Search for "Copilot" in the Godot asset library directly within the engine. Download the addon and enable in the project settings.
+- Alternatively, navigate to the [releases page](https://github.com/minosvasilias/godot-copilot/releases) and follow the instructions for the latest one
+- You may also clone this repository and copy the `copilot` addon into the `res://addons` directory of your project
 
 Afterwards, enable the addon in the project settings, and enter your OpenAI API key in the `Copilot` tab located on the right-hand dock.
 

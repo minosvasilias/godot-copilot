@@ -56,14 +56,13 @@ func get_completion(_prompt, _suffix):
 	]
 	var http_request = HTTPRequest.new()
 	add_child(http_request)
-	http_request.connect("request_completed",Callable(self,"on_request_completed").bind(_prompt, _suffix))
+	http_request.connect("request_completed",on_request_completed.bind(prompt, suffix, http_request))
 	var json_body = JSON.stringify(body)
-	var buffer = json_body.to_utf8_buffer()
 	var error = http_request.request(URL, headers, HTTPClient.METHOD_POST, json_body)
 	if error != OK:
 		emit_signal("completion_error", null)
 
-func on_request_completed(result, response_code, headers, body, pre, post):
+func on_request_completed(result, response_code, headers, body, pre, post, http_request):
 	var test_json_conv = JSON.new()
 	test_json_conv.parse(body.get_string_from_utf8())
 	var json = test_json_conv.get_data()
@@ -72,4 +71,6 @@ func on_request_completed(result, response_code, headers, body, pre, post):
 		emit_signal("completion_error", response)
 		return
 	var completion = response.choices[0].text
+	if is_instance_valid(http_request):
+		http_request.queue_free()
 	emit_signal("completion_received", completion, pre, post)

@@ -84,12 +84,23 @@ Yes! Please switch to the `3.x` branch for the appropriate version of this addon
 
 ### Why should i use this over Github Copilot?
 
-Do use Github Copilot when suitable! As long as this project depends on OpenAI APIs, Github Copilot is likely a better deal.
+Do use Github Copilot when suitable!
 
-However, this does offer some unique benefits:
+This does offer code completions directly within the Godot editor, which is the main usecase.
 
-- Works directly in the editor, which may suit your existing workflow better
-- Supports GPT-4, giving you access to a more capable model than Github Copilot currently offers
+When using OpenAIs APIs, Godot Copilot may also be more expensive than GitHub Copilot, depending on your model choice and usage.
+
+#### Can i use my existing GitHub Copilot subscription?
+
+Yes, this is now supported. (for the 4.x version of this plugin only, for now)
+
+**However, use at your own risk!**
+
+GitHub Copilot usage outside of the indended scope may lead to account suspensions. This plugin makes sure to mirror authentic VsCode plugin requests, including session handling and authentication, but please be aware of the GitHub Copilot terms of service before using.
+
+To extract your existing GitHub Copilot token for use with Godot Copilot, please follow the instructions in the `copilot-gpt4-service` repo here: [Obtaining Copilot Token](https://github.com/aaamoon/copilot-gpt4-service?tab=readme-ov-file#obtaining-copilot-token).
+
+You may then select the `gpt-4-github-copilot` model after installing this plugin.
 
 ### Can this do anything other than code completion?
 

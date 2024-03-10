@@ -8,8 +8,10 @@ extends Control
 @onready var shortcut_modifier_select = $VBoxParent/ShortcutSetting/HBoxContainer/Modifier
 @onready var shortcut_key_select = $VBoxParent/ShortcutSetting/HBoxContainer/Key
 @onready var multiline_toggle = $VBoxParent/MultilineSetting/Multiline
+@onready var openai_key_title = $VBoxParent/OpenAiSetting/Label
 @onready var openai_key_input = $VBoxParent/OpenAiSetting/OpenAiKey
 @onready var version_label = $Version
+@onready var info = $VBoxParent/Info
 
 @export var icon_shader : ShaderMaterial
 @export var highlight_color : Color
@@ -30,6 +32,7 @@ var allow_multiline = true
 
 const PREFERENCES_STORAGE_NAME = "user://copilot.cfg"
 const PREFERENCES_PASS = "F4fv2Jxpasp20VS5VSp2Yp2v9aNVJ21aRK"
+const GITHUB_COPILOT_DISCLAIMER = "Use GitHub Copilot keys at your own risk. Retrieve key by following instructions [url=https://github.com/aaamoon/copilot-gpt4-service?tab=readme-ov-file#obtaining-copilot-token]here[/url]."
 
 func _ready():
 	#Initialize dock, load settings
@@ -264,6 +267,14 @@ func set_openai_api_key(key):
 func set_model(model_name):
 	#Apply selected model
 	cur_model = model_name
+	# Handle some special model scenarios
+	if "github-copilot" in model_name:
+		openai_key_title.text = "GitHub Copilot API Key"
+		info.parse_bbcode(GITHUB_COPILOT_DISCLAIMER)
+		info.show()
+	else:
+		openai_key_title.text = "OpenAI API Key"
+		info.hide()
 
 func set_shortcut_modifier(modifier):
 	#Apply selected shortcut modifier
@@ -333,6 +344,7 @@ func load_config():
 	if err != OK: return
 	cur_model = config.get_value("preferences", "model", cur_model)
 	apply_by_value(model_select, cur_model)
+	set_model(model_select.get_item_text(model_select.selected))
 	cur_shortcut_modifier = config.get_value("preferences", "shortcut_modifier", cur_shortcut_modifier)
 	apply_by_value(shortcut_modifier_select, cur_shortcut_modifier)
 	cur_shortcut_key = config.get_value("preferences", "shortcut_key", cur_shortcut_key)
@@ -350,3 +362,7 @@ func apply_by_value(option_button, value):
 
 func set_version(version):
 	version_label.text = "v%s" % version
+
+
+func on_info_meta_clicked(meta):
+	OS.shell_open(meta)

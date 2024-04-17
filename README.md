@@ -98,7 +98,7 @@ Yes, this is now supported. (for the 4.x version of this plugin only, for now)
 
 GitHub Copilot usage outside of the indended scope may lead to account suspensions. This plugin makes sure to mirror authentic VsCode plugin requests, including session handling and authentication, but please be aware of the GitHub Copilot terms of service before using.
 
-To extract your existing GitHub Copilot token for use with Godot Copilot, please follow the instructions in the `copilot-gpt4-service` repo here: [Obtaining Copilot Token](https://github.com/aaamoon/copilot-gpt4-service?tab=readme-ov-file#obtaining-copilot-token).
+To extract your existing GitHub Copilot token for use with Godot Copilot, please follow the instructions in the `copilot-gpt4-service` repo here: [Obtaining Copilot Token](https://gitlab.com/aaamoon/copilot-gpt4-service?tab=readme-ov-file#obtaining-copilot-token).
 
 You may then select the `gpt-4-github-copilot` model after installing this plugin.
 

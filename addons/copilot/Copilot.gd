@@ -32,7 +32,7 @@ var allow_multiline = true
 
 const PREFERENCES_STORAGE_NAME = "user://copilot.cfg"
 const PREFERENCES_PASS = "F4fv2Jxpasp20VS5VSp2Yp2v9aNVJ21aRK"
-const GITHUB_COPILOT_DISCLAIMER = "Use GitHub Copilot keys at your own risk. Retrieve key by following instructions [url=https://github.com/aaamoon/copilot-gpt4-service?tab=readme-ov-file#obtaining-copilot-token]here[/url]."
+const GITHUB_COPILOT_DISCLAIMER = "Use GitHub Copilot keys at your own risk. Retrieve key by following instructions [url=https://gitlab.com/aaamoon/copilot-gpt4-service?tab=readme-ov-file#obtaining-copilot-token]here[/url]."
 
 func _ready():
 	#Initialize dock, load settings
